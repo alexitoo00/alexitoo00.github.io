@@ -31,7 +31,6 @@ main {
   margin-left: 5rem;
   padding: 1rem;
 }
-
 .navbar {
   position: fixed;
   background-color: var(--bg-primary);
@@ -159,7 +158,7 @@ main {
     height: 100vh;
   }
 
-  .navbar:hover {
+  .navbar:hover{
     width: 16rem;
   }
 
