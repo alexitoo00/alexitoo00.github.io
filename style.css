@@ -132,7 +132,7 @@ main {
 }
 
 .main {
-    margin-left: 5rem;
+    margin-left: 7rem;
 }
 
 .main .more {
@@ -141,6 +141,7 @@ main {
 }
 
 .navbar:hover+.main.more {
+    margin-left: 20rem;
     transition: var(--transition-speed);
 }
 
