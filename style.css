@@ -131,6 +131,7 @@ main {
   transition: var(--transition-speed);
 }
 
+
 /* Small screens */
 @media only screen and (max-width: 600px) {
   .navbar {
