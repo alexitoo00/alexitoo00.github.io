@@ -28,11 +28,18 @@ body::-webkit-scrollbar-thumb {
     background: #6649b8;
 }
 
-main {
+.main {
     margin-left: var(--main-margin-left);
     padding: 1rem;
+    transition: var(--transition-speed);
 }
 
+.navbar:hover > #main{
+margin-left:20rem;
+padding:1rem;
+transition:var(--transition-speed);
+background-color: yellow;
+}
 .navbar {
     position: fixed;
     background-color: var(--bg-primary);
@@ -124,22 +131,6 @@ main {
 
 .navbar:hover .logo svg {
     transform: rotate(-180deg);
-}
-
-.navbar:hover main {
-    margin-left: 20rem;
-    transition: var(--transition-speed);
-}
-
-.main {
-    margin-left: 7rem;
-    position: relative;
-    left: 5rem;
-}
-
-.navbar:hover+.main.more {
-    margin-left: 20rem;
-    transition: var(--transition-speed);
 }
 
 
