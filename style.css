@@ -130,7 +130,10 @@ main {
   margin-left: 20rem;
   transition: var(--transition-speed);
 }
-
+main div:hover{
+  margin-left: 20rem;
+  transition: var(--transition-speed);
+}
 
 /* Small screens */
 @media only screen and (max-width: 600px) {
@@ -152,9 +155,8 @@ main {
     justify-content: center;
   }
 
-  main div:hover {
-    margin: 20;
-    transition: var(--transition-speed);
+  main {
+    margin: 0;
   }
 }
 
