@@ -151,8 +151,9 @@ main {
     justify-content: center;
   }
 
-  main {
-    margin: 0;
+  main div:hover {
+    margin: 20;
+    transition: var(--transition-speed);
   }
 }
 
