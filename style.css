@@ -130,7 +130,7 @@ main {
   margin-left: 20rem;
   transition: var(--transition-speed);
 }
-main div:hover{
+.main:hover{
   margin-left: 20rem;
   transition: var(--transition-speed);
 }
