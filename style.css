@@ -133,11 +133,8 @@ main {
 
 .main {
     margin-left: 7rem;
-}
-
-.main .more {
-    margin-left: 20rem;
-    transition: var(--transition-speed);
+    position: relative;
+    left: 5rem;
 }
 
 .navbar:hover+.main.more {
