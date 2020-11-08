@@ -38,8 +38,6 @@ body::-webkit-scrollbar-thumb {
     transition: var(--transition-speed);
 }
 
-body:hover>#main {}
-
 .navbar {
     position: fixed;
     background-color: var(--bg-primary);
@@ -157,6 +155,7 @@ body:hover>#main {}
 
     main {
         margin: 0;
+        margin-left: 5rem;
     }
 }
 
