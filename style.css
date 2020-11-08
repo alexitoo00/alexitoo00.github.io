@@ -153,9 +153,9 @@ body::-webkit-scrollbar-thumb {
         justify-content: center;
     }
 
-    main {
+    .main {
         margin: 0;
-        margin-left: 5rem;
+        margin-left: 0rem;
     }
 }
 
