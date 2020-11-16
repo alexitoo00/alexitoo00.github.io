@@ -14,8 +14,9 @@ body {
     background-color: white;
     margin: 0;
     padding: 0;
-    background-image: url('https://cdn.lowgif.com/full/10e673dfebcbf3a0-fondos-de-pantalla-gratis-animados-para-protector-de.gif');
+    background-image: url('https://www.hd-freewallpapers.com/latest-wallpapers/abstract-website-backgrounds.jpg');
     background-repeat: no-repeat;
+    background-position: center;
     background-size: cover;
 }
 
@@ -156,9 +157,9 @@ body::-webkit-scrollbar-thumb {
     .main {
         margin: 0;
         margin-left: 0rem;
-        margin-right:0rem;
+        margin-right: 0rem;
         margin-bottom: 5rem;
-        
+
     }
 }
 
