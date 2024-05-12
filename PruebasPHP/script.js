@@ -1,5 +1,4 @@
 
-document.getElementById ("boton").addEventListener ("click", fun);
 function fun() {
     $.ajax({
         url: 'process.php',
@@ -13,3 +12,4 @@ function fun() {
         }
     });
 }
+document.getElementById ("boton").addEventListener("click", fun());
