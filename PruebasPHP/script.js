@@ -12,4 +12,4 @@ function fun() {
         }
     });
 }
-document.getElementById ("boton").addEventListener("click", fun());
+document.getElementById("boton").addEventListener("click", fun);
