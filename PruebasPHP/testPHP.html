@@ -52,14 +52,5 @@
       city is New York City.
     </p>
     <p class="broken"></p>
-    <script>
-      $.ajax({
-        method: "POST",
-        url: "process.php",
-        data: { text: $("p.unbroken").text() },
-      }).done(function (response) {
-        $("p.broken").html(response);
-      });
-    </script>
   </body>
 </html>
