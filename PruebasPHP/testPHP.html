@@ -48,7 +48,12 @@
     <script>
       // Function to fetch data from PHP script using AJAX
       function fetchData() {
-        fetch("http://cambiocoche.free.nf/process.php") // Replace with the URL of your PHP script
+        fetch("http://cambiocoche.free.nf/process.php", {
+          method: "GET",
+          withCredentials: true,
+          crossorigin: true,
+          mode: "no-cors",
+        }) // Replace with the URL of your PHP script
           .then((response) => response.json())
           .then((data) => {
             // Display product data on webpage
