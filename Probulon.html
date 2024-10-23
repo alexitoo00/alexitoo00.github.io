@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>Animated Button Fix</title>
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        flex-direction: column;
+        font-family: Arial, sans-serif;
+      }
+
+      #myButton {
+        width: 200px;
+        height: 50px;
+        background-color: red; /* Initial red color */
+        color: white;
+        font-size: 18px;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .animation {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        background-color: green;
+        width: 0; /* Start with 0% width */
+        left: 0;
+        transition: width var(--speed) linear;
+        z-index: 0;
+      }
+
+      #myButton span {
+        position: relative;
+        z-index: 1;
+      }
+
+      #speedControl {
+        margin-top: 20px;
+      }
+
+      #errorMessage {
+        margin-top: 20px;
+        padding: 10px;
+        background-color: #ffcc00; /* Yellow background for error */
+        border: 2px solid #cc9900; /* Darker border */
+        border-radius: 5px;
+        color: #333;
+        display: none; /* Initially hidden */
+        font-weight: bold;
+        font-size: 16px;
+      }
+
+      #speedLabel {
+        margin-right: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <button id="myButton">
+      <div class="animation"></div>
+      <span>Armado</span>
+    </button>
+
+    <!-- Error message field -->
+    <div id="errorMessage"></div>
+
+    <hr />
+    <div id="speedControl">
+      <label
+        for="speedInput"
+        id="speedLabel"
+        >Velocidad animación (s):
+      </label>
+      <input
+        type="number"
+        id="speedInput"
+        value="2"
+        step="0.1"
+        min="0.1"
+      />
+    </div>
+    <div>
+      <label>Botón de armado/desarmado </label>
+      <button onclick="startAnimation()">Armar/Desarmar</button>
+    </div>
+    <div>
+      <label>Confirmación del ESP de que el motor está en la posición final </label>
+      <button onclick="endAnimation()">Terminar animación</button>
+    </div>
+    <div>
+      <label>En caso contrario, enviar el mensaje de error </label>
+      <input
+      type="text"
+      id="mensajeError"
+      value="Error: Texto de error"
+      />
+      <button
+        onclick="Error(document.getElementById('mensajeError').value)"
+      >
+        Enviar error
+      </button>
+    </div>
+
+    <script>
+      const button = document.getElementById("myButton");
+      const animation = button.querySelector(".animation");
+      const buttonText = button.querySelector("span");
+      const speedInput = document.getElementById("speedInput");
+      const errorMessageDiv = document.getElementById("errorMessage");
+
+      let isArmed = true; // Tracks the state of the button
+      let isAnimating = false; // Tracks if animation is in progress
+      let isEnding = false; // Tracks if animation is ending (to prevent multiple ends)
+      let currentWidth = 0; // Tracks current width
+      const armandoWidth = 90; // Width of the armado state
+      const desarmandoWidth = 10; // Width of the desarmado state
+      const fastSpeed = 0.1; // Fast transition speed
+      let animationTimeout;
+      let secondAnimationTimeout;
+
+      // Handle button press
+      button.addEventListener("click", () => {
+        console.log("Button clicked!");
+
+        if (!isAnimating) {
+          startAnimation();
+        } else {
+          console.log("Animation in progress, button disabled.");
+        }
+      });
+
+      // Start the transition animation
+      function startAnimation() {
+        disableButton();
+        isAnimating = true; // Mark animation as in progress
+
+        const speed = speedInput.value;
+        document.documentElement.style.setProperty("--speed", `${speed}s`);
+        console.log(`Speed set to: ${speed}s`);
+
+        // Move up to 90% after a short delay
+        animationTimeout = setTimeout(() => {
+          if (isArmed) {
+            console.log(
+              "Transitioning from Armado (red) to Desarmado (green)..."
+            );
+            animation.style.width = `${armandoWidth}%`; // Move to 90%
+            buttonText.textContent = "Desarmando...";
+          } else {
+            console.log(
+              "Transitioning from Desarmado (green) to Armado (red)..."
+            );
+            animation.style.width = `${desarmandoWidth}%`; // Move to 10%
+            buttonText.textContent = "Armando...";
+          }
+
+          // Update currentWidth on transition end
+          animation.addEventListener("transitionend", () => {
+            currentWidth = parseFloat(animation.style.width);
+            console.log(`Current width is now ${currentWidth}`);
+          });
+
+          // Delay the second timeout for checking after speed
+          secondAnimationTimeout = setTimeout(() => {
+            if (currentWidth === armandoWidth) {
+              console.log("Animation stopped at " + armandoWidth + "%");
+            } else if (currentWidth === desarmandoWidth) {
+              console.log("Animation stopped at " + desarmandoWidth + "%");
+            }
+          }, speed * 1000); // Time in milliseconds
+        }, 10); // Short delay for smooth transition
+      }
+
+      // End the animation and move from the current width to 100%
+      function endAnimation() {
+        // Check if it's animating and the width is less than 100%
+        if (!isAnimating) {
+          console.log("No animation in progress to end.");
+          return;
+        }
+        if (isEnding) {
+          console.log("Already in ending animation.");
+          return;
+        }
+        isEnding = true;
+        console.log(
+          "End animation called. Interrupting the current animation."
+        );
+
+        // Clear timeouts to stop the ongoing animation
+        clearTimeout(animationTimeout);
+        clearTimeout(secondAnimationTimeout);
+
+        disableButton();
+
+        // Set the transition to fast speed
+        document.documentElement.style.setProperty("--speed", `${fastSpeed}s`);
+
+        // Calculate the current width again in case of any changes
+        currentWidth = (animation.offsetWidth / button.offsetWidth) * 100;
+
+        // Move to either 100% or 0% based on state
+        if (isArmed) {
+          animation.style.width = "100%"; // Move to 100%
+          console.log(`Continuing animation from ${currentWidth}% to 100%`);
+        } else {
+          animation.style.width = "0%"; // Move to 0%
+          console.log(`Continuing animation from ${currentWidth}% to 0%`);
+        }
+
+        // Wait for the completion of the interrupted animation
+        animation.addEventListener(
+          "transitionend",
+          () => {
+            console.log("Animation completed to " + currentWidth + "%");
+
+            enableButton();
+            isAnimating = false; // Clear the animation flag
+            isEnding = false; // Clear the ending flag
+            isArmed = !isArmed; // Toggle the state
+            buttonText.textContent = isArmed ? "Armado" : "Desarmado";
+          },
+          { once: true } // Ensures this listener is called only once
+        );
+      }
+
+      function Error(errorMessage = "") {
+        isEnding = false;
+        isAnimating = false;
+
+        // Clear timeouts to stop the ongoing animation
+        clearTimeout(animationTimeout);
+        clearTimeout(secondAnimationTimeout);
+
+        disableButton();
+
+        // Set the transition to fast speed
+        document.documentElement.style.setProperty("--speed", `${fastSpeed}s`);
+
+        console.log("Error state encountered.");
+        errorMessageDiv.textContent = errorMessage; // Set error message
+        errorMessageDiv.style.display = "block"; // Show error message
+        buttonText.textContent = "Error"; // Change button text
+        button.style.backgroundColor = "darkred"; // Set button color for error
+        animation.style.width = "0%"; // Reset animation
+      }
+
+      // Disable button presses during animation
+      function disableButton() {
+        button.disabled = true;
+        button.style.cursor = "not-allowed";
+        console.log("Button disabled.");
+      }
+
+      // Re-enable button presses after animation
+      function enableButton() {
+        button.disabled = false;
+        button.style.cursor = "pointer";
+        console.log("Button enabled.");
+      }
+    </script>
+  </body>
+</html>
