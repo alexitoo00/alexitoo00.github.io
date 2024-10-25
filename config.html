@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>Animated Button Fix</title>
+    <style>
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        transition: background-color 0.5s;
+      }
+
+      .grid-container {
+        display: flex;
+        flex-direction: column;
+        background-color: #2196f3;
+        padding: 10px;
+        flex: 1;
+        gap: 10px;
+      }
+
+      .grid-container > div {
+        background-color: rgba(255, 255, 255, 0.8);
+        text-align: center;
+        padding: 20px 0;
+        font-size: 5vw;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      input[type="button"] {
+        font-size: 5vw;
+        padding: 20px;
+        margin: 10px;
+      }
+
+      .status {
+        font-size: 4vw;
+      }
+
+      .status-item {
+        margin: 5px 0;
+      }
+
+      #myButton {
+        height: 60px;
+        background-color: red; /* Initial red color */
+        color: white;
+        font-size: 18px;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        font-size: 5vw;
+        margin: 10px;
+      }
+
+      .animation {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        background-color: green;
+        width: 0; /* Start with 0% width */
+        left: 0;
+        transition: width var(--speed) ease-out;
+        z-index: 0;
+      }
+
+      #myButton span {
+        position: relative;
+        z-index: 1;
+      }
+
+      #errorMessage {
+        margin-top: 20px;
+        padding: 10px;
+        background-color: #ffcc00; /* Yellow background for error */
+        border: 2px solid #cc9900; /* Darker border */
+        border-radius: 5px;
+        color: #333;
+        display: none; /* Initially hidden */
+        font-weight: bold;
+        font-size: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="grid-container">
+      <!-- Botones para control del motor -->
+      <div id="top">
+        <h1>Configuración</h1>
+      </div>
+      <div id="mid">
+        <div
+          id="selectionFields"
+          style="
+            text-align: left;
+            padding: 15vw;
+            margin-top: 0px;
+            margin-bottom: 0px;
+          "
+        >
+          <div id="CheckBoxStyleId">
+            <input
+              type="checkbox"
+              id="antybaby"
+              value="2"
+              step="0.1"
+              min="0.1"
+              onclick="handleClick(this);"
+            />
+            <label>Antibaby</label>
+          </div>
+          <div id="CheckBoxStyleId">
+            <input
+              type="checkbox"
+              id="vibracion"
+              value="2"
+              step="0.1"
+              min="0.1"
+              onclick="handleClick(this);"
+            />
+            <label>Vibración</label>
+          </div>
+          <span
+            id="vibrationOptions"
+            style="display: none"
+          >
+            <label>Sensibilidad</label>
+            <select
+              name="select"
+              onclick="handleSelect(this)"
+            >
+              <option
+                value="Baja"
+                selected
+              >
+                Baja
+              </option>
+              <option value="Media">Media</option>
+              <option value="Alta">Alta</option>
+            </select>
+          </span>
+          <div id="CheckBoxStyleId">
+            <input
+              type="checkbox"
+              id="autocierre"
+              value="2"
+              step="0.1"
+              min="0.1"
+              onclick="handleClick(this);"
+            />
+            <label>Autocierre</label>
+          </div>
+          <div id="CheckBoxStyleId">
+            <input
+              type="checkbox"
+              id="sonido"
+              value="2"
+              step="0.1"
+              min="0.1"
+              onclick="handleClick(this);"
+            />
+            <label>Sonido armado/desarmado</label>
+          </div>
+          <div id="CheckBoxStyleId">
+            <input
+              type="checkbox"
+              id="indicadorled"
+              value="2"
+              step="0.1"
+              min="0.1"
+              onclick="handleClick(this);"
+            />
+            <label>Indicador LED</label>
+          </div>
+          <div id="CheckBoxStyleId">
+            <input
+              type="checkbox"
+              id="prealarma"
+              value="2"
+              step="0.1"
+              min="0.1"
+              onclick="handleClick(this);"
+            />
+            <label>Prealarma</label>
+          </div>
+        </div>
+      </div>
+
+      <div id="bot">
+        <input
+          type="button"
+          value="Atrás"
+          onclick="location.href = 'Probulon.html';"
+        />
+      </div>
+    </div>
+
+    <script>
+      function handleClick(cb) {
+        if (cb.id == "vibracion") {
+          document.getElementById("vibrationOptions").style.display = cb.checked
+            ? "block"
+            : "none";
+        }
+        console.log("Clicked " + cb.id + ", new value = " + cb.checked);
+      }
+      function handleSelect(element) {
+        console.log("Selected " + element.value);
+      }
+    </script>
+  </body>
+</html>
