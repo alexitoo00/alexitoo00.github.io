@@ -6,20 +6,51 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0"
     />
-    <title>Animated Button Fix</title>
     <style>
+      html,
       body {
+        height: 100%;
+        margin: 0;
         display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
         flex-direction: column;
-        font-family: Arial, sans-serif;
+        transition: background-color 0.5s;
+      }
+
+      .grid-container {
+        display: flex;
+        flex-direction: column;
+        background-color: #2196f3;
+        padding: 10px;
+        flex: 1;
+        gap: 10px;
+      }
+
+      .grid-container > div {
+        background-color: rgba(255, 255, 255, 0.8);
+        text-align: center;
+        padding: 20px 0;
+        font-size: 5vw;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      input[type="button"] {
+        font-size: 5vw;
+        padding: 20px;
+        margin: 10px;
+      }
+
+      .status {
+        font-size: 4vw;
+      }
+
+      .status-item {
+        margin: 5px 0;
       }
 
       #myButton {
-        width: 200px;
-        height: 50px;
+        height: 60px;
         background-color: red; /* Initial red color */
         color: white;
         font-size: 18px;
@@ -28,6 +59,8 @@
         cursor: pointer;
         position: relative;
         overflow: hidden;
+        font-size: 5vw;
+        margin: 10px;
       }
 
       .animation {
@@ -37,17 +70,13 @@
         background-color: green;
         width: 0; /* Start with 0% width */
         left: 0;
-        transition: width var(--speed) linear;
+        transition: width var(--speed) ease-out;
         z-index: 0;
       }
 
       #myButton span {
         position: relative;
         z-index: 1;
-      }
-
-      #speedControl {
-        margin-top: 20px;
       }
 
       #errorMessage {
@@ -61,63 +90,87 @@
         font-weight: bold;
         font-size: 16px;
       }
-
-      #speedLabel {
-        margin-right: 10px;
-      }
     </style>
+
+    <title>Control Motor</title>
   </head>
   <body>
-    <button id="myButton">
-      <div class="animation"></div>
-      <span>Armado</span>
-    </button>
+    <div class="grid-container">
+      <!-- Botones para control del motor -->
+      <div id="top">
+        <h1>Probulón</h1>
+      </div>
+      <div id="mid">
+        <button
+          type="button"
+          id="myButton"
+        >
+          <div class="animation"></div>
+          <span>Armado</span>
+        </button>
 
-    <!-- Error message field -->
-    <div id="errorMessage"></div>
+        <div id="errorMessage"></div>
+        <!-- Error message field -->
+      </div>
 
-    <hr />
-    <div id="speedControl">
-      <label
-        for="speedInput"
-        id="speedLabel"
-        >Velocidad animación (s):
-      </label>
-      <input
-        type="number"
-        id="speedInput"
-        value="6"
-        step="0.1"
-        min="0.1"
-      />
-    </div>
-    <div>
-      <label>Botón de armado/desarmado </label>
-      <button onclick="startAnimation()">Armar/Desarmar</button>
-    </div>
-    <div>
-      <label>Confirmación del ESP de que el motor está en la posición final </label>
-      <button onclick="endAnimation()">Terminar animación</button>
-    </div>
-    <div>
-      <label>En caso contrario, enviar el mensaje de error </label>
-      <input
-      type="text"
-      id="mensajeError"
-      value="Error: Texto de error"
-      />
-      <button
-        onclick="Error(document.getElementById('mensajeError').value)"
-      >
-        Enviar error
-      </button>
+      <div id="bot">
+        <input
+          type="button"
+          value="Configuración"
+          onclick="location.href = 'config.html';"
+        />
+      </div>
     </div>
 
     <script>
+      // Enviar comando al ESP (abrir, cerrar, detener)
+      function sendCommand(command) {
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "/command?cmd=" + command, true); // Enviar comando como parámetro
+        xhr.send();
+      }
+
+      // Función para actualizar el estado de las variables dinámicamente
+      function updateStatus() {
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState == 4 && xhr.status == 200) {
+            var status = JSON.parse(xhr.responseText); // Parsear la respuesta como JSON
+            document.getElementById("movApertura").innerText =
+              status.moviendoApertura ? "Sí" : "No";
+            document.getElementById("movCierre").innerText =
+              status.moviendoCierre ? "Sí" : "No";
+            document.getElementById("sensApertura").innerText =
+              status.sensorApertura ? "Activo" : "Inactivo";
+            document.getElementById("sensCierre").innerText =
+              status.sensorCierre ? "Activo" : "Inactivo";
+            document.getElementById("errorMotor").innerText = status.errorMotor
+              ? "Error"
+              : "No Error";
+            document.getElementById("movApertura_ESP1").innerText =
+              status.moviendoApertura_ESP1 ? "Sí" : "No";
+            document.getElementById("movCierre_ESP1").innerText =
+              status.moviendoCierre_ESP1 ? "Sí" : "No";
+            document.getElementById("sensApertura_ESP1").innerText =
+              status.sensorApertura_ESP1 ? "Activo" : "Inactivo";
+            document.getElementById("sensCierre_ESP1").innerText =
+              status.sensorCierre_ESP1 ? "Activo" : "Inactivo";
+            document.getElementById("errorMotor_ESP1").innerText =
+              status.errorMotor_ESP1 ? "Error" : "No Error";
+            document.getElementById("alive").innerText = status.alive
+              ? "Conectado"
+              : "Desconectado";
+          }
+        };
+        xhr.open("GET", "/status", true); // Solicitar el estado de las variables
+        xhr.send();
+      }
+
+      // Actualizar el estado de las variables cada 2 segundos
+      setInterval(updateStatus, 1000);
       const button = document.getElementById("myButton");
       const animation = button.querySelector(".animation");
       const buttonText = button.querySelector("span");
-      const speedInput = document.getElementById("speedInput");
       const errorMessageDiv = document.getElementById("errorMessage");
 
       let isArmed = true; // Tracks the state of the button
@@ -126,6 +179,7 @@
       let currentWidth = 0; // Tracks current width
       const armandoWidth = 90; // Width of the armado state
       const desarmandoWidth = 10; // Width of the desarmado state
+      const speed = 10;
       const fastSpeed = 0.1; // Fast transition speed
       let animationTimeout;
       let secondAnimationTimeout;
@@ -145,8 +199,7 @@
       function startAnimation() {
         disableButton();
         isAnimating = true; // Mark animation as in progress
-
-        const speed = speedInput.value;
+        button.style.backgroundColor = "red";
         document.documentElement.style.setProperty("--speed", `${speed}s`);
         console.log(`Speed set to: ${speed}s`);
 
