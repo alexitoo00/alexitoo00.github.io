@@ -1,0 +1,12 @@
+{
+  "name": "My ESP8266 Device",
+  "version": "1.2",
+  "builds": [
+    {
+      "chipFamily": "ESP8266",
+      "parts": [
+        { "path": "firmware.bin", "offset": 0 }
+      ]
+    }
+  ]
+}
